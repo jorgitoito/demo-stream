@@ -1,0 +1,114 @@
+# Logging
+logging:
+  file:
+    path: ${LOG_PATH:.}
+  level:
+    com.jmr.stream.demostream: DEBUG
+    ROOT: WARN
+
+
+# Server Info
+server:
+  servlet.context-path: /demo
+  port: 35006
+  tomcat:
+    accesslog:
+      enabled: true
+  error:
+    include-message: always
+    include-binding-errors: always
+
+
+demostream:
+  ## Workflow
+  workflow:
+    APPLICATION_FINISHED:
+      - "MARKETPLACE_CREATE_TEAM"
+    MARKETPLACE_FINISHED:
+      - "UCD_CREATE_TEAM"
+    URBAN_CODE_FINISHED:
+      - "ALM_CREATE_APPLICATION"
+    ALM_FINISHED:
+      - "GITHUB_MAKE_OWNER"
+    GITHUB_MAKE_OWNER_FINISHED:
+      - "CLOUD_BEES_CREATE_JOB"
+      - "CREATE_DEFAULT_COMPONENTS"
+    CLOUD_BEES_FINISHED:
+      - "GITHUB_SET_HOOK"
+    URBAN_CODE_COMPONENT_FINISHED:
+      - "GITHUB_CREATE_COMPONENT"
+      - "SONAR_CREATE_COMPONENT"
+      - "KIUWAN_CREATE_COMPONENT"
+    GITHUB_COMPONENT_FINISHED:
+      - "GITHUB_COMPONENT_SET_DEFAULT_BRANCH"
+      - "CLOUD_BEES_CREATE_COMPONENT"
+
+
+
+## Spring properties
+spring:
+  application:
+    name: @project.name@
+    #  will fetch description and version from the pom.xml
+    description: @project.description@
+    version: @project.version@
+  data:
+    rest:
+      base-path: "/data"
+  datasource:
+    url: jdbc:postgresql://localhost:5432/devsecops
+    username: postgres
+    password: postgres
+  security:
+    user:
+      name: user
+      password: password
+  rabbitmq:
+    host: localhost
+    # docker version -> host: rabbit-mq , other case: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+  ## Cloud
+  cloud:
+    stream:
+      bindings:
+        input:
+          destination: queue.application.messages
+          group: demostream
+          #Required group name for high availability to avoid duplicate message triggers
+        output:
+          destination: queue.application.messages
+
+
+  cache:
+    cache-names: username,ldapuser
+    caffeine:
+      spec: maximumSize=500, expireAfterAccess=1h
+
+  #JPA
+  jpa:
+    hibernate:
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyComponentPathImpl
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        default_schema: esq_stream
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    open-in-view: false
+
+
+springdoc:
+  swagger-ui:
+    #For sorting endpoints alphabetically
+    operationsSorter: "alpha"
+    #For sorting tags alphabetically
+    tagsSorter: alpha
+    #disable the default swagger petstore URL
+    disable-swagger-default-url: true

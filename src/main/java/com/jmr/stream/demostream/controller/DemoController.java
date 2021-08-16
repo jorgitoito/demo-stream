@@ -95,7 +95,8 @@ public class DemoController {
      * @param dni serie de 7 u 8 numeros seguidos de una letra de control = modulo 23
      * @return User
      */
-    @Operation(summary = "Get User By DNI")
+    @Operation(summary = "Get User By DNI",
+            description = "Get User By DNI ; dni will be checked")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Get User By DNI",
                     content = @Content(
@@ -106,7 +107,7 @@ public class DemoController {
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
-    @GetMapping("/users/{user_dni}")
+    @GetMapping(value = "/users/{user_dni}", produces = {"application/json"})
     @Tag(name = "Users")
     public ResponseEntity<UserEntity> getUserByDni
     (
@@ -139,15 +140,16 @@ public class DemoController {
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
-    @PostMapping("/users")
+    @PostMapping(value = "/users", consumes = {"application/json"})
     @Tag(name = "Users")
     public ResponseEntity<UserEntity> createUser
     (
-            @Parameter(description = "User data") @Valid @NotNull @RequestBody UserEntity payload
+            @Parameter(description = "User data", required = true, schema = @Schema(implementation = UserEntity.class))
+            @Valid @NotNull @RequestBody UserEntity payload
     ) {
-        log.info("response payload: {}", payload);
+        log.info("createUser payload: {}", payload);
         UserEntity responseEntity = userService.createUser(payload);
-        log.info("response createUser: {}", responseEntity);
+        log.info("createUser responseEntity: {}", responseEntity);
 
         return new ResponseEntity<>(responseEntity, HttpStatus.CREATED);
     }
@@ -175,6 +177,38 @@ public class DemoController {
     public ResponseEntity<List<EventEntity>> getEvents() {
         List<EventEntity> responseEntity = eventsService.getEvents();
         log.info("response getEvents: {}", responseEntity);
+
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.maxAge(MAX_AGE, TimeUnit.SECONDS))
+                .body(responseEntity);
+    }
+
+
+    /**
+     * Get Events by type
+     *
+     * @return Events list
+     */
+    @Operation(summary = "Get Events by type")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Get Events by type",
+                    content = @Content(
+                            mediaType = APP_JSON,
+                            array = @ArraySchema(
+                                    schema = @Schema(
+                                            implementation = EventEntity.class
+                                    )))),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
+    })
+    @GetMapping("/events/bytype")
+    @Tag(name = "Events")
+    public ResponseEntity<List<EventEntity>> getEventsByType
+    (
+            @Parameter(description = "type") @Valid @NotNull @RequestParam final String type
+    ) {
+        List<EventEntity> responseEntity = eventsService.getEventsByType(type);
+        log.info("getEventsByType response: {}", responseEntity);
 
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(MAX_AGE, TimeUnit.SECONDS))

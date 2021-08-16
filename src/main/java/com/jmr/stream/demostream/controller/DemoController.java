@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.CacheControl;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -129,7 +130,7 @@ public class DemoController {
      */
     @Operation(summary = "Create User ")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Create User",
+            @ApiResponse(responseCode = "201", description = "Create User",
                     content = @Content(
                             mediaType = APP_JSON,
                             schema = @Schema(
@@ -148,9 +149,7 @@ public class DemoController {
         UserEntity responseEntity = userService.createUser(payload);
         log.info("response createUser: {}", responseEntity);
 
-        return ResponseEntity.ok()
-                .cacheControl(CacheControl.maxAge(MAX_AGE, TimeUnit.SECONDS))
-                .body(responseEntity);
+        return new ResponseEntity<>(responseEntity, HttpStatus.CREATED);
     }
 
 

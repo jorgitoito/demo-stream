@@ -40,12 +40,22 @@ public class UserServiceBusiness {
         return result;
     }
 
+    /**
+     * Create user if dni is new and send message
+     *
+     * @param payload User data
+     * @return User created
+     */
     public UserEntity createUser(UserEntity payload) {
         log.info("createUser: payload [{}] ", payload);
         UserEntity user = service.getUserByDni(payload.getDni());
-        log.info("createUser: user [{}] ", user);
+        log.debug("createUser: user [{}] ", user);
+        // user getUserByDni is not null: error. Must not exists with this DNI.
         NullChecker.checkNoNull_BAD_REQUEST(user, "User´s DNI exist already: " + payload.getDni());
+        // It is a new user/dni. lets to create it.
         UserEntity response = service.createUser(payload);
+        log.debug("createUser: user created [{}] ", user);
+        // record this event sending a message
         this.sendMessage(payload, response, "CREATE_USER");
         return response;
     }

@@ -4,8 +4,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Utility class for checking null objects
- * If object is null, throws an exception
+ * Utility class for checking null objects or not null objects:
+ * If object must be No null AND is null, throws an exception
+ * If object must be null AND is NOT null, throws an exception
+ *
+ * Using this class, code is cleaner.
  */
 public final class NullChecker {
     /**
@@ -43,6 +46,11 @@ public final class NullChecker {
         }
     }
 
+    /**
+     * Check obj must be null
+     * @param obj obj to check
+     * @param msg error text
+     */
     public static void checkNoNull_BAD_REQUEST(Object obj, String msg) {
         if (obj != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, msg);

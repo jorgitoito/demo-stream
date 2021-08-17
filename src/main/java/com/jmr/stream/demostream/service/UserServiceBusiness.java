@@ -9,9 +9,12 @@ import com.jmr.stream.demostream.util.MessageUtil;
 import com.jmr.stream.demostream.util.NullChecker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Slf4j
@@ -33,7 +36,7 @@ public class UserServiceBusiness {
     }
 
 
-    public UserEntity getUserByDni(String dni) {
+    public UserEntity getUserByDni(@NotEmpty String dni) {
         log.info("getUserByDni: dni [{}] ", dni);
         UserEntity result = service.getUserByDni(dni);
         NullChecker.checkNull_NOT_FOUND(result, "User not found with dni: " + dni);
@@ -41,12 +44,12 @@ public class UserServiceBusiness {
     }
 
     /**
-     * Create user if dni is new and send message
+     * Create user if dni is new one and send message
      *
      * @param payload User data
      * @return User created
      */
-    public UserEntity createUser(UserEntity payload) {
+    public UserEntity createUser(@NotNull UserEntity payload) {
         log.info("createUser: payload [{}] ", payload);
         UserEntity user = service.getUserByDni(payload.getDni());
         log.debug("createUser: user [{}] ", user);
@@ -81,7 +84,7 @@ public class UserServiceBusiness {
     }
 
 
-    private String getJson(Object obj) {
+    private String getJson(@NotNull Object obj) {
         String json = null;
         try {
             json = new ObjectMapper().writeValueAsString(obj);

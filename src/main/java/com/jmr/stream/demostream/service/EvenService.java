@@ -7,12 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -33,7 +33,7 @@ public class EvenService {
     private final EntityManager em;
 
 
-    public EventEntity recordEvent(EventEntity event) {
+    public EventEntity recordEvent(@NotNull EventEntity event) {
         return repository.save(event);
     }
 
@@ -50,7 +50,7 @@ public class EvenService {
      * @param type type to filter
      * @return event list
      */
-    public List<EventEntity> getEventsByType(String type) {
+    public List<EventEntity> getEventsByType(@NotEmpty String type) {
         log.debug("getEventsByType type [{}]", type);
         List<EventEntity> lista = null;
         try {

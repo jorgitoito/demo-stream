@@ -19,6 +19,8 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
  * JWT
  * cache
  * Unit test:  junit and mockito
+ * documentation.
+ * Feign calls to another docker
  */
 
 @ServletComponentScan

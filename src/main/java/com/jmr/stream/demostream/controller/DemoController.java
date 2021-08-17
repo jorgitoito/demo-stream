@@ -205,7 +205,7 @@ public class DemoController {
     @Tag(name = "Events")
     public ResponseEntity<List<EventEntity>> getEventsByType
     (
-            @Parameter(description = "type") @Valid @NotNull @RequestParam final String type
+            @Parameter(description = "type") @Valid @NotBlank @Size(min=2, max = 50) @RequestParam final String type
     ) {
         List<EventEntity> responseEntity = eventsService.getEventsByType(type);
         log.info("getEventsByType response: {}", responseEntity);

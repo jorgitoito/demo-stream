@@ -27,6 +27,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * DemoControllerTest_2 help us to test REST API and validation:
  *
  * @Valid and @Validated annotation
+ *
+ * This test is running slower because it needs context running
+ *
+ * it is almost a integration test and more than an unit test
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(DemoController.class)

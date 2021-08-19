@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,6 +42,29 @@ class DemoControllerTest {
         when(userService.getUsers()).thenReturn(listaUsers);
         // test
         ResponseEntity<List<UserEntity>> response = controller.getUsers();
+        // Check
+        assertNotNull(response);
+    }
+
+    @Test
+    void createUser() {
+        UserEntity user = new UserEntity();
+        user.setDni("1234V");
+        user.setName("PEPE");
+        ResponseEntity<UserEntity> response = controller.createUser(user);
+        // Check
+        assertNotNull(response);
+    }
+
+    @Test
+    void createUser_2() {
+        UserEntity user = new UserEntity();
+        user.setDni("1234V");
+        user.setName("PEPE");
+        // when
+        when(userService.createUser(any(UserEntity.class))).thenReturn(user);
+        // test
+        ResponseEntity<UserEntity> response = controller.createUser(user);
         // Check
         assertNotNull(response);
     }

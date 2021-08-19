@@ -129,9 +129,9 @@ public class DemoController {
      * @param payload User data
      * @return User created
      */
-    @Operation(summary = "Create User ")
+    @Operation(summary = "Create User")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Create User",
+            @ApiResponse(responseCode = "201", description = "User created",
                     content = @Content(
                             mediaType = APP_JSON,
                             schema = @Schema(
@@ -205,7 +205,7 @@ public class DemoController {
     @Tag(name = "Events")
     public ResponseEntity<List<EventEntity>> getEventsByType
     (
-            @Parameter(description = "type") @Valid @NotBlank @Size(min=2, max = 50) @RequestParam final String type
+            @Parameter(description = "type") @Valid @NotBlank @Size(min = 2, max = 50) @RequestParam final String type
     ) {
         List<EventEntity> responseEntity = eventsService.getEventsByType(type);
         log.info("getEventsByType response: {}", responseEntity);

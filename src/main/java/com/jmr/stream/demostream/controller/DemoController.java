@@ -207,8 +207,9 @@ public class DemoController {
     (
             @Parameter(description = "type") @Valid @NotBlank @Size(min = 2, max = 50) @RequestParam final String type
     ) {
+        log.info("getEventsByType type: {}", type);
         List<EventEntity> responseEntity = eventsService.getEventsByType(type);
-        log.info("getEventsByType response: {}", responseEntity);
+        log.debug("getEventsByType response: {}", responseEntity);
 
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.maxAge(MAX_AGE, TimeUnit.SECONDS))

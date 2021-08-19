@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * * Handle all exceptions and java bean validation errors for all endpoints income data that use the @Valid annotation
+ * * Handle all exceptions and java bean validation errors for all endpoints' income data that use the @Valid annotation
  *
  * @author Ehab Qadah
  */

@@ -26,15 +26,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 /**
  * DemoControllerTest_2 help us to test REST API and validation:
  *
- * @Valid and @Validated annotation
+ * annotations: Valid and Validated
  *
  * This test is running slower because it needs context running
  *
- * it is almost a integration test and more than an unit test
+ * it is almost an integration test and more than a unit test
  */
 @RunWith(SpringRunner.class)
 @WebMvcTest(DemoController.class)
-public class DemoControllerTest_2 {
+public class DemoControllerTest_REST_API {
     @Autowired
     private MockMvc mockMvc;
 
@@ -73,11 +73,9 @@ public class DemoControllerTest_2 {
     @Test
     public void createUser() throws Exception {
         // given
-        List<UserEntity> listaUsers = new ArrayList<>();
         UserEntity user1 = new UserEntity();
         user1.setDni("03514454P");
         user1.setName("Pepe");
-        listaUsers.add(user1);
         // when
         given(userService.createUser(user1)).willReturn(user1);
         // test
@@ -97,12 +95,10 @@ public class DemoControllerTest_2 {
     @Test
     public void createUser_wrong_dni_number() throws Exception {
         // given
-        List<UserEntity> listaUsers = new ArrayList<>();
         UserEntity user1 = new UserEntity();
         // wrong dni number
         user1.setDni("03514459P");
         user1.setName("Pepe");
-        listaUsers.add(user1);
         // when
         given(userService.createUser(user1)).willReturn(user1);
         // test
@@ -122,12 +118,10 @@ public class DemoControllerTest_2 {
     @Test
     public void createUser_name_is_Blank() throws Exception {
         // given
-        List<UserEntity> listaUsers = new ArrayList<>();
         UserEntity user1 = new UserEntity();
         user1.setDni("03514454P");
         // name is blank: error
         user1.setName("");
-        listaUsers.add(user1);
         // when
         given(userService.createUser(user1)).willReturn(user1);
 

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 public class DniValidator implements ConstraintValidator<Dni, String> {
 
 
-    private Pattern mask = Pattern.compile("[0-9]{8,8}[A-Z]");
+    private final Pattern mask = Pattern.compile("[0-9]{8,8}[A-Z]");
 
     @Override
     public void initialize(Dni constraintAnnotation) {
@@ -35,10 +35,7 @@ public class DniValidator implements ConstraintValidator<Dni, String> {
 
         final String controlCalculated = letters.substring(position, position + 1);
 
-        if (!control.equalsIgnoreCase(controlCalculated)) {
-            return false;
-        }
-        return true;
+        return control.equalsIgnoreCase(controlCalculated);
     }
 
 

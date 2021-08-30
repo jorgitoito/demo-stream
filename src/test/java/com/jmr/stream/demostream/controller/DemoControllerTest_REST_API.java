@@ -1,6 +1,7 @@
 package com.jmr.stream.demostream.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jmr.stream.demostream.model.dto.UserDTO;
 import com.jmr.stream.demostream.model.entity.UserEntity;
 import com.jmr.stream.demostream.service.EvenService;
 import com.jmr.stream.demostream.service.UserServiceBusiness;
@@ -73,7 +74,7 @@ public class DemoControllerTest_REST_API {
     @Test
     public void createUser() throws Exception {
         // given
-        UserEntity user1 = new UserEntity();
+        UserDTO user1 = new UserDTO();
         user1.setDni("03514454P");
         user1.setName("Pepe");
         // when
@@ -88,14 +89,14 @@ public class DemoControllerTest_REST_API {
                 .getResponse()
                 .getContentAsString();
         // check
-        UserEntity responseUser = mapper.readValue(res, UserEntity.class);
+        UserDTO responseUser = mapper.readValue(res, UserDTO.class);
         assertEquals(user1, responseUser);
     }
 
     @Test
     public void createUser_wrong_dni_number() throws Exception {
         // given
-        UserEntity user1 = new UserEntity();
+        UserDTO user1 = new UserDTO();
         // wrong dni number
         user1.setDni("03514459P");
         user1.setName("Pepe");
@@ -118,7 +119,7 @@ public class DemoControllerTest_REST_API {
     @Test
     public void createUser_name_is_Blank() throws Exception {
         // given
-        UserEntity user1 = new UserEntity();
+        UserDTO user1 = new UserDTO();
         user1.setDni("03514454P");
         // name is blank: error
         user1.setName("");

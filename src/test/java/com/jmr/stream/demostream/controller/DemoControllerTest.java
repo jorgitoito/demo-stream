@@ -1,5 +1,6 @@
 package com.jmr.stream.demostream.controller;
 
+import com.jmr.stream.demostream.model.dto.UserDTO;
 import com.jmr.stream.demostream.model.entity.UserEntity;
 import com.jmr.stream.demostream.service.EvenService;
 import com.jmr.stream.demostream.service.UserServiceBusiness;
@@ -48,23 +49,23 @@ class DemoControllerTest {
 
     @Test
     void createUser() {
-        UserEntity user = new UserEntity();
+        UserDTO user = new UserDTO();
         user.setDni("1234V");
         user.setName("PEPE");
-        ResponseEntity<UserEntity> response = controller.createUser(user);
+        ResponseEntity<UserDTO> response = controller.createUser(user);
         // Check
         assertNotNull(response);
     }
 
     @Test
     void createUser_2() {
-        UserEntity user = new UserEntity();
+        UserDTO user = new UserDTO();
         user.setDni("1234V");
         user.setName("PEPE");
         // when
-        when(userService.createUser(any(UserEntity.class))).thenReturn(user);
+        when(userService.createUser(any(UserDTO.class))).thenReturn(user);
         // test
-        ResponseEntity<UserEntity> response = controller.createUser(user);
+        ResponseEntity<UserDTO> response = controller.createUser(user);
         // Check
         assertNotNull(response);
     }

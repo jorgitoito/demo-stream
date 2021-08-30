@@ -1,6 +1,7 @@
 package com.jmr.stream.demostream.controller;
 
 
+import com.jmr.stream.demostream.model.dto.UserDTO;
 import com.jmr.stream.demostream.model.entity.EventEntity;
 import com.jmr.stream.demostream.model.entity.UserEntity;
 import com.jmr.stream.demostream.service.EvenService;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -142,15 +144,14 @@ public class DemoController {
     })
     @PostMapping(value = "/users", consumes = {"application/json"})
     @Tag(name = "Users")
-    public ResponseEntity<UserEntity> createUser
+    public ResponseEntity<UserDTO> createUser
     (
             @Parameter(description = "User data", required = true, schema = @Schema(implementation = UserEntity.class))
-            @Valid @NotNull @RequestBody UserEntity payload
+            @Valid @NotNull @RequestBody UserDTO payload
     ) {
         log.info("createUser payload: {}", payload);
-        UserEntity responseEntity = userService.createUser(payload);
+        UserDTO responseEntity = userService.createUser(payload);
         log.info("createUser responseEntity: {}", responseEntity);
-
         return new ResponseEntity<>(responseEntity, HttpStatus.CREATED);
     }
 

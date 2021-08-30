@@ -3,6 +3,7 @@ package com.jmr.stream.demostream.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jmr.stream.demostream.model.dto.UserDTO;
 import com.jmr.stream.demostream.model.entity.UserEntity;
 import com.jmr.stream.demostream.stream.dto.LongIdMessage;
 import com.jmr.stream.demostream.util.MessageUtil;
@@ -10,6 +11,7 @@ import com.jmr.stream.demostream.util.NullChecker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.stereotype.Service;
 
@@ -49,18 +51,22 @@ public class UserServiceBusiness {
      * @param payload User data
      * @return User created
      */
-    public UserEntity createUser(@NotNull UserEntity payload) {
+    public UserDTO createUser(@NotNull UserDTO payload) {
         log.info("createUser: payload [{}] ", payload);
-        UserEntity user = service.getUserByDni(payload.getDni());
+        // Hide Entity details using a DTO.
+        ModelMapper modelMapper = new ModelMapper();
+        UserEntity payloadUser = modelMapper.map(payload, UserEntity.class);
+        log.info("createUser: payloadUser [{}] ", payloadUser);
+        UserEntity user = service.getUserByDni(payloadUser.getDni());
         log.debug("createUser: user [{}] ", user);
         // user getUserByDni is not null: error. Must not exist with this DNI.
         NullChecker.checkNoNull_BAD_REQUEST(user, "User´s DNI exist already: " + payload.getDni());
         // It is a new user/dni. lets to create it.
-        UserEntity response = service.createUser(payload);
+        UserEntity response = service.createUser(payloadUser);
         log.debug("createUser: user created [{}] ", response);
         // record this event sending a message
-        this.sendMessage(payload, response, "CREATE_USER");
-        return response;
+        this.sendMessage(payloadUser, response, "CREATE_USER");
+        return modelMapper.map(response, UserDTO.class);
     }
 
 

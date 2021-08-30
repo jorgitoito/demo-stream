@@ -1,10 +1,12 @@
 package com.jmr.stream.demostream.model.validator;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+@Slf4j
 public class PhoneValidator implements ConstraintValidator<Phone, String> {
     @Override
     public void initialize(Phone constraintAnnotation) {
@@ -14,10 +16,9 @@ public class PhoneValidator implements ConstraintValidator<Phone, String> {
     @Override
     public boolean isValid(String phone, ConstraintValidatorContext constraintValidatorContext) {
         if (!StringUtils.isEmpty(phone)) {
-
             // Obtener la información de solicitud predeterminada
             String defaultConstraintMessageTemplate = constraintValidatorContext.getDefaultConstraintMessageTemplate();
-            System.out.println("default message :" + defaultConstraintMessageTemplate);
+            log.info("default message [{}] ", defaultConstraintMessageTemplate);
             // Deshabilitar el mensaje de aviso predeterminado
             constraintValidatorContext.disableDefaultConstraintViolation();
             // Establecer aviso

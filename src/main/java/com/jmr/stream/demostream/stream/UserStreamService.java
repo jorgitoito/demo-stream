@@ -43,7 +43,9 @@ public class UserStreamService {
             log.info("createUser: userEn [{}] ", userEn);
             EventEntity event = new EventEntity();
             event.setType("CREATE_USER");
-            event.setComment(userEn.toString());
+            if (userEn != null) {
+                event.setComment(userEn.toString());
+            }
             evenService.recordEvent(event);
         }
 

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -32,9 +33,13 @@ public class UserServiceBusiness {
     private final Processor applicationProcessor;
 
 
-    public List<UserEntity> getUsers() {
+    public List<UserDTO> getUsers() {
         log.info("getUsers");
-        return service.getUsers();
+        ModelMapper modelMapper = new ModelMapper();
+        return service.getUsers().stream()
+                .map( r-> modelMapper.map(r, UserDTO.class))
+                .collect(Collectors.toList());
+
     }
 
 
@@ -74,12 +79,13 @@ public class UserServiceBusiness {
 
     private void sendMessage(UserEntity payload, UserEntity response, String type) {
         try {
-            //Send message.
+            //Build message.
             LongIdMessage message = LongIdMessage.builder()
                     .id(1l)
                     .idS(payload.getDni())
                     .objectJson(this.getJson(response))
                     .workflow(false).build();
+            //Send message.
             this.applicationProcessor.output().send
                     (
                             MessageUtil.message(message, type)

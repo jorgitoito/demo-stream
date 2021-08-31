@@ -34,15 +34,15 @@ class DemoControllerTest {
     @Test
     void getUsers() {
         // given
-        List<UserEntity> listaUsers = new ArrayList<>();
-        UserEntity user1 = new UserEntity();
+        List<UserDTO> listaUsers = new ArrayList<>();
+        UserDTO user1 = new UserDTO();
         user1.setDni("12345T");
         user1.setName("Pepe");
         listaUsers.add(user1);
         // when
         when(userService.getUsers()).thenReturn(listaUsers);
         // test
-        ResponseEntity<List<UserEntity>> response = controller.getUsers();
+        ResponseEntity<List<UserDTO>> response = controller.getUsers();
         // Check
         assertNotNull(response);
     }

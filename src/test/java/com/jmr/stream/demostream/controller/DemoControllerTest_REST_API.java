@@ -50,8 +50,8 @@ public class DemoControllerTest_REST_API {
     @Test
     public void getUsers() throws Exception {
         // given
-        List<UserEntity> listaUsers = new ArrayList<>();
-        UserEntity user1 = new UserEntity();
+        List<UserDTO> listaUsers = new ArrayList<>();
+        UserDTO user1 = new UserDTO();
         user1.setDni("03514454P");
         user1.setName("Pepe");
         listaUsers.add(user1);

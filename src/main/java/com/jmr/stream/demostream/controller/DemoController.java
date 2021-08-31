@@ -74,15 +74,15 @@ public class DemoController {
                             mediaType = APP_JSON,
                             array = @ArraySchema(
                                     schema = @Schema(
-                                            implementation = UserEntity.class
+                                            implementation = UserDTO.class
                                     )))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
     @GetMapping("/users")
     @Tag(name = "Users")
-    public ResponseEntity<List<UserEntity>> getUsers() {
-        List<UserEntity> responseEntity = userService.getUsers();
+    public ResponseEntity<List<UserDTO>> getUsers() {
+        List<UserDTO> responseEntity = userService.getUsers();
         log.info("response getUsers: {}", responseEntity);
 
         return ResponseEntity.ok()
@@ -146,7 +146,7 @@ public class DemoController {
     @Tag(name = "Users")
     public ResponseEntity<UserDTO> createUser
     (
-            @Parameter(description = "User data", required = true, schema = @Schema(implementation = UserEntity.class))
+            @Parameter(description = "User data", required = true, schema = @Schema(implementation = UserDTO.class))
             @Valid @NotNull @RequestBody UserDTO payload
     ) {
         log.info("createUser payload: {}", payload);

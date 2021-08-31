@@ -33,6 +33,10 @@ public class UserServiceBusiness {
     private final Processor applicationProcessor;
 
 
+    /**
+     * Get Users
+     * @return User list
+     */
     public List<UserDTO> getUsers() {
         log.info("getUsers");
         ModelMapper modelMapper = new ModelMapper();
@@ -41,8 +45,12 @@ public class UserServiceBusiness {
                 .collect(Collectors.toList());
 
     }
-
-
+    
+    /**
+     * Get User by DNI
+     * @param dni dni
+     * @return User
+     */
     public UserEntity getUserByDni(@NotEmpty String dni) {
         log.info("getUserByDni: dni [{}] ", dni);
         UserEntity result = service.getUserByDni(dni);

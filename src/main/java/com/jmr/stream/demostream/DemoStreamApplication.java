@@ -9,18 +9,18 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
  * <p>
  * targets to cover:
  * <p>
- * JPA.
- * JPA API Criteria
- * OPEN API. API REST.
- * Data validation: ConstraintValidator, jsoup, json schema,...
- * Spring cloud stream. Producer Message -> RabbitMQ -> Consumer
- * Workflow.  1-step triggers 2, 3 and 4;  4 triggers 5 and 6;....
- * Sleuth, logs.
- * JWT
- * cache
- * Unit test:  junit and mockito
- * documentation.
- * Feign calls to another docker
+ * (/) JPA.
+ * (/) JPA API Criteria
+ * (/) OPEN API. API REST.
+ * (/) Data validation: ConstraintValidator, jsoup, json schema,...
+ * (/) Spring cloud stream. Producer Message -> RabbitMQ -> Consumer
+ * (/) Workflow.  1-step triggers 2, 3 and 4;  4 triggers 5 and 6;....
+ * (/) Sleuth, logs.
+ * (X) JWT
+ * (X) cache
+ * (X) Unit test:  junit and mockito
+ * (X) documentation.
+ * (X) Feign calls to another docker
  */
 
 @ServletComponentScan

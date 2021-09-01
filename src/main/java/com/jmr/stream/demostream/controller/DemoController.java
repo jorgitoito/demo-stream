@@ -17,7 +17,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -124,6 +123,37 @@ public class DemoController {
                 .body(responseEntity);
     }
 
+
+    /**
+     * Delete User By DNI
+     *
+     * @param dni serie de 7 u 8 numeros seguidos de una letra de control = modulo 23
+     * @return User
+     */
+    @Operation(summary = "Delete User By DNI",
+            description = "Delete User By DNI ; dni will be checked")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Delete User By DNI",
+                    content = @Content(
+                            mediaType = APP_JSON,
+                            schema = @Schema(
+                                    implementation = String.class
+                            ))),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
+    })
+    @DeleteMapping(value = "/users/{user_dni}", produces = {"application/json"})
+    @Tag(name = "Users")
+    public ResponseEntity<Void> deleteUserByDni
+    (
+            @Parameter(description = "User DNI") @PathVariable(name = "user_dni") @NotBlank @Size(min = 8, max = 9) final String dni
+    ) {
+        log.info("deleteUserByDni: {}", dni);
+        userService.deleteUserByDni(dni);
+        log.info("deleteUserByDni DONE");
+        // response code 200 (OK) if the response includes an entity describing the status, 202 (Accepted) if the action has been queued, or 204 (No Content) if the action has been performed but the response does not include an entity
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
     /**
      * Create User

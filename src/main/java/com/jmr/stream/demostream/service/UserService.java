@@ -38,6 +38,12 @@ public class UserService {
         return result;
     }
 
+
+    public void deleteUser(UserEntity payload) {
+        log.info("deleteUser: payload [{}] ", payload);
+        repository.delete(payload);
+        log.info("deleteUser: deleted");
+    }
     // PRIVATE
 
 

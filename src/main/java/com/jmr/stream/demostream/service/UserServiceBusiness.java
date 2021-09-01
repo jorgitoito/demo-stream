@@ -45,7 +45,7 @@ public class UserServiceBusiness {
                 .collect(Collectors.toList());
 
     }
-    
+
     /**
      * Get User by DNI
      * @param dni dni
@@ -78,21 +78,31 @@ public class UserServiceBusiness {
         UserEntity response = service.createUser(payloadUser);
         log.debug("createUser: user created [{}] ", response);
         // record this event sending a message
-        this.sendMessage(payloadUser, response, "CREATE_USER");
+        this.sendMessage(payloadUser, response, "CREATE_USER", false);
         return modelMapper.map(response, UserDTO.class);
     }
 
+    /**
+     * Delete User by DNI
+     * @param dni DNI
+     */
+    public void deleteUserByDni(String dni) {
+        UserEntity result = service.getUserByDni(dni);
+        NullChecker.checkNull_NOT_FOUND(result, "User not found with dni: " + dni);
+        service.deleteUser(result);
+        log.debug("deleteUserByDni: deleted");
+    }
 
     // PRIVATE
 
-    private void sendMessage(UserEntity payload, UserEntity response, String type) {
+    private void sendMessage(UserEntity payload, UserEntity response, String type, boolean workflow) {
         try {
             //Build message.
             LongIdMessage message = LongIdMessage.builder()
                     .id(1l)
                     .idS(payload.getDni())
                     .objectJson(this.getJson(response))
-                    .workflow(false).build();
+                    .workflow(workflow).build();
             //Send message.
             this.applicationProcessor.output().send
                     (
@@ -114,5 +124,6 @@ public class UserServiceBusiness {
         log.info("getJson: json [{}] ", json);
         return json;
     }
+
 
 }

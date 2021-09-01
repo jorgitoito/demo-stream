@@ -31,6 +31,10 @@ public class UserServiceBusiness {
      */
     private final Processor applicationProcessor;
 
+    /**
+     * Model mapper
+     */
+    private final ModelMapper modelMapper;
 
     /**
      * Get Users
@@ -39,7 +43,6 @@ public class UserServiceBusiness {
      */
     public List<UserDTO> getUsers() {
         log.info("getUsers");
-        ModelMapper modelMapper = new ModelMapper();
         return service.getUsers().stream()
                 .map(r -> modelMapper.map(r, UserDTO.class))
                 .collect(Collectors.toList());
@@ -68,7 +71,6 @@ public class UserServiceBusiness {
     public UserDTO createUser(@NotNull UserDTO payload) {
         log.info("createUser: payload [{}] ", payload);
         // Hide Entity details using a DTO.
-        ModelMapper modelMapper = new ModelMapper();
         UserEntity payloadUser = modelMapper.map(payload, UserEntity.class);
         log.info("createUser: payloadUser [{}] ", payloadUser);
         UserEntity user = service.getUserByDni(payloadUser.getDni());

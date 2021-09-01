@@ -29,7 +29,14 @@ public class UserStreamService {
      * log events in User. create
      */
     private static final String CREATE_USER = "headers['type']=='CREATE_USER'";
-
+    /**
+     * log events in User. delete
+     */
+    private static final String DELETE_USER = "headers['type']=='DELETE_USER'";
+    /**
+     * log events in User. SEND_EMAIL
+     */
+    private static final String SEND_EMAIL = "headers['type']=='SEND_EMAIL'";
 
     private EvenService evenService;
 
@@ -51,7 +58,29 @@ public class UserStreamService {
 
     }
 
+    @StreamListener(target = INPUT, condition = DELETE_USER)
+    public void deleteUser(final LongIdMessage message) {
 
+        log.info("deleteUser: message [{}] ", message);
+        EventEntity event = new EventEntity();
+        event.setType("DELETE_USER");
+        if (message.getIdS() != null) {
+            event.setComment(message.getIdS());
+        }
+        evenService.recordEvent(event);
+    }
+
+    @StreamListener(target = INPUT, condition = SEND_EMAIL)
+    public void sendNotification(final LongIdMessage message) {
+
+        log.info("Begin:sendNotification: message [{}] ", message);
+        log.info(" ---------------- ");
+        log.info("End: sendNotification: message [{}] ", message);
+
+    }
+
+
+    ///
     private UserEntity getUserEntityfromJson(String json) {
         UserEntity userEn = null;
         try {

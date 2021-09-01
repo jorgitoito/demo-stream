@@ -10,7 +10,6 @@ import com.jmr.stream.demostream.util.MessageUtil;
 import com.jmr.stream.demostream.util.NullChecker;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.stereotype.Service;
@@ -35,19 +34,21 @@ public class UserServiceBusiness {
 
     /**
      * Get Users
+     *
      * @return User list
      */
     public List<UserDTO> getUsers() {
         log.info("getUsers");
         ModelMapper modelMapper = new ModelMapper();
         return service.getUsers().stream()
-                .map( r-> modelMapper.map(r, UserDTO.class))
+                .map(r -> modelMapper.map(r, UserDTO.class))
                 .collect(Collectors.toList());
 
     }
 
     /**
      * Get User by DNI
+     *
      * @param dni dni
      * @return User
      */
@@ -78,36 +79,47 @@ public class UserServiceBusiness {
         UserEntity response = service.createUser(payloadUser);
         log.debug("createUser: user created [{}] ", response);
         // record this event sending a message
-        this.sendMessage(payloadUser, response, "CREATE_USER", false);
+        this.sendMessage(payloadUser.getDni(), response, "CREATE_USER", false);
         return modelMapper.map(response, UserDTO.class);
     }
 
     /**
      * Delete User by DNI
+     *
      * @param dni DNI
      */
     public void deleteUserByDni(String dni) {
         UserEntity result = service.getUserByDni(dni);
         NullChecker.checkNull_NOT_FOUND(result, "User not found with dni: " + dni);
         service.deleteUser(result);
+        // once delete is done, send message: workflow : 2 steps: 1 DELETE_USER event and 2 Send Notification
+        this.sendMessage(dni, null, "DELETE_USER_FINISHED", true);
         log.debug("deleteUserByDni: deleted");
     }
 
     // PRIVATE
 
-    private void sendMessage(UserEntity payload, UserEntity response, String type, boolean workflow) {
+    private void sendMessage(String dni, UserEntity response, String type, boolean workflow) {
         try {
             //Build message.
             LongIdMessage message = LongIdMessage.builder()
                     .id(1l)
-                    .idS(payload.getDni())
+                    .idS(dni)
                     .objectJson(this.getJson(response))
                     .workflow(workflow).build();
             //Send message.
-            this.applicationProcessor.output().send
-                    (
-                            MessageUtil.message(message, type)
-                    );
+            if (workflow) {
+                this.applicationProcessor.output().send
+                        (
+                                MessageUtil.message(message, type, true)
+                        );
+            } else {
+                this.applicationProcessor.output().send
+                        (
+                                MessageUtil.message(message, type, false)
+                        );
+            }
+
         } catch (Exception e) {
             log.error("createUser: error [{}] ", e.getMessage());
         }

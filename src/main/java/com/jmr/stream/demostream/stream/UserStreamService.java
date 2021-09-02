@@ -42,9 +42,7 @@ public class UserStreamService {
 
     @StreamListener(target = INPUT, condition = CREATE_USER)
     public void createUser(final LongIdMessage message) {
-
         log.info("createUser: message [{}] ", message);
-
         if (message.getObjectJson() != null) {
             UserEntity userEn = this.getUserEntityfromJson(message.getObjectJson());
             log.info("createUser: userEn [{}] ", userEn);
@@ -55,12 +53,10 @@ public class UserStreamService {
             }
             evenService.recordEvent(event);
         }
-
     }
 
     @StreamListener(target = INPUT, condition = DELETE_USER)
     public void deleteUser(final LongIdMessage message) {
-
         log.info("deleteUser: message [{}] ", message);
         EventEntity event = new EventEntity();
         event.setType("DELETE_USER");
@@ -72,11 +68,14 @@ public class UserStreamService {
 
     @StreamListener(target = INPUT, condition = SEND_EMAIL)
     public void sendNotification(final LongIdMessage message) {
-
         log.info("Begin:sendNotification: message [{}] ", message);
-        log.info(" ---------------- ");
+        EventEntity event = new EventEntity();
+        event.setType("SEND_EMAIL");
+        if (message.getIdS() != null) {
+            event.setComment(message.getIdS());
+        }
+        evenService.recordEvent(event);
         log.info("End: sendNotification: message [{}] ", message);
-
     }
 
 

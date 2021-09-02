@@ -20,6 +20,7 @@ public class UserEntity {
     /**
      * Entity dni
      * specific validator implementation
+     * dni is primary key = index will be created = search by this field = better performance
      */
     @Id
     @Dni

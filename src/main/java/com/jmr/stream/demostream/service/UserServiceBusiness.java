@@ -43,6 +43,7 @@ public class UserServiceBusiness {
      */
     public List<UserDTO> getUsers() {
         log.info("getUsers");
+        // return UserDTO objects
         return service.getUsers().stream()
                 .map(r -> modelMapper.map(r, UserDTO.class))
                 .collect(Collectors.toList());
@@ -55,11 +56,11 @@ public class UserServiceBusiness {
      * @param dni dni
      * @return User
      */
-    public UserEntity getUserByDni(@NotEmpty String dni) {
+    public UserDTO getUserByDni(@NotEmpty String dni) {
         log.info("getUserByDni: dni [{}] ", dni);
         UserEntity result = service.getUserByDni(dni);
         NullChecker.checkNull_NOT_FOUND(result, "User not found with dni: " + dni);
-        return result;
+        return modelMapper.map(result, UserDTO.class);
     }
 
     /**
@@ -128,7 +129,16 @@ public class UserServiceBusiness {
     }
 
 
-    private String getJson(@NotNull Object obj) {
+    /**
+     * Get json string from Object
+     *
+     * @param obj Object to get json string
+     * @return json string from Object
+     */
+    private String getJson(Object obj) {
+        if (obj == null) {
+            return "";
+        }
         String json = null;
         try {
             json = new ObjectMapper().writeValueAsString(obj);

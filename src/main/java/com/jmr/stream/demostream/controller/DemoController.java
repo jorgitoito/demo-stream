@@ -3,7 +3,6 @@ package com.jmr.stream.demostream.controller;
 
 import com.jmr.stream.demostream.model.dto.UserDTO;
 import com.jmr.stream.demostream.model.entity.EventEntity;
-import com.jmr.stream.demostream.model.entity.UserEntity;
 import com.jmr.stream.demostream.service.EvenService;
 import com.jmr.stream.demostream.service.UserServiceBusiness;
 import com.jmr.stream.demostream.util.Constants;
@@ -103,19 +102,19 @@ public class DemoController {
                     content = @Content(
                             mediaType = APP_JSON,
                             schema = @Schema(
-                                    implementation = UserEntity.class
+                                    implementation = UserDTO.class
                             ))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
     })
     @GetMapping(value = "/users/{user_dni}", produces = {"application/json"})
     @Tag(name = "Users")
-    public ResponseEntity<UserEntity> getUserByDni
+    public ResponseEntity<UserDTO> getUserByDni
     (
             @Parameter(description = "User DNI") @PathVariable(name = "user_dni") @NotBlank @Size(min = 8, max = 9) final String dni
     ) {
         log.info("response getUserByDni: {}", dni);
-        UserEntity responseEntity = userService.getUserByDni(dni);
+        UserDTO responseEntity = userService.getUserByDni(dni);
         log.info("response getUserByDni: {}", responseEntity);
 
         return ResponseEntity.ok()
@@ -167,7 +166,7 @@ public class DemoController {
                     content = @Content(
                             mediaType = APP_JSON,
                             schema = @Schema(
-                                    implementation = UserEntity.class
+                                    implementation = UserDTO.class
                             ))),
             @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)

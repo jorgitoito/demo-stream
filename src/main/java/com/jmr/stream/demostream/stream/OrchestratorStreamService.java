@@ -47,7 +47,7 @@ public class OrchestratorStreamService {
     @StreamListener(target = INPUT, condition = FINISHED_CONDITION)
     public void stateFinished(@Payload Object payload, @Header(MessageUtil.TYPE_HEADER) String type) {
         log.info("Type {}, payload {}", type, payload);
-        //Check the nest state depending on configuration properties
+        //Check the next state depending on configuration properties
         List<String> nextStates = this.properties.getWorkflow().get(type);
         //If there are next states defined
         if (nextStates != null) {

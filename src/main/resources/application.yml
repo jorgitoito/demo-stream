@@ -4,6 +4,7 @@ logging:
     path: ${LOG_PATH:.}
   level:
     com.jmr.stream.demostream: DEBUG
+    reactivefeign.client.log: TRACE
     ROOT: WARN
 
 

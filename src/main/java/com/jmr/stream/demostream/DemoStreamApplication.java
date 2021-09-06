@@ -20,7 +20,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
  * (X) cache
  * (X) Unit test:  junit and mockito
  * (X) documentation.
- * (X) Feign calls to another docker
+ * (X) Feign calls to another docker. WebReactiveFeign.
  */
 
 @ServletComponentScan

@@ -17,9 +17,9 @@ import reactivefeign.webclient.WebReactiveFeign;
 public class TrackerAPIConfig {
 
     /**
-     * EngineAPI API bean
+     * TrackerAPI bean
      *
-     * @return EngineAPI API bean
+     * @return TrackerAPI bean
      */
     @Bean
     public TrackerAPI engineAPI() {
@@ -31,7 +31,7 @@ public class TrackerAPIConfig {
                         .<TrackerAPI>builder()
                         .target(TrackerAPI.class, "http://localhost:35007/tracker");
 
-
+        // todo: port and context to properties
         log.info("TrackerAPI DONE");
         return client;
     }

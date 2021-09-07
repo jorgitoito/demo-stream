@@ -21,8 +21,6 @@ public class ServiceUtil {
 
     public static final String EXCEPTION = "Exception";
 
-    public static final String NS = "ns-";
-
     /**
      * Log error and create ResponseStatusException
      *

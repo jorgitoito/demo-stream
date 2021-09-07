@@ -22,7 +22,7 @@ import static com.jmr.stream.demostream.util.Constants.APP_JSON;
 /**
  * Tracker controller.
  * <p>
- * Calls to Consumer Tracker micro-service
+ * API: Calls to Consumer Tracker micro-service
  */
 @Slf4j
 @RestController
@@ -37,6 +37,7 @@ public class TrackerController {
      * Tracker Service
      */
     private final TrackerService service;
+
     /**
      * Post Data
      * Send a string to another micro-service, using Open Feign
@@ -65,5 +66,37 @@ public class TrackerController {
 
         return ResponseEntity.ok()
                 .body(responseEntity);
+    }
+
+
+
+    /**
+     * Post Data by Message
+     * Send a string to another micro-service, using Open Feign
+     * @return String
+     */
+    @Operation(summary = "Post DATA")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Post DATA",
+                    content = @Content(
+                            mediaType = APP_JSON,
+                            schema = @Schema(
+                                    implementation = String.class
+                            ))),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content)
+    })
+    @PostMapping("/data/message")
+    @Tag(name = "Tracker")
+    public ResponseEntity<String> createDataMessage
+    (
+            @Parameter(description = "data", required = true)
+            @NotNull @RequestBody String payload
+    ) {
+        service.createDataMessage(payload);
+        log.info("createDataMessage: Message SEND");
+
+        return ResponseEntity.ok()
+                .body("Message SEND");
     }
 }

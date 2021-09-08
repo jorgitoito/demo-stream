@@ -1,6 +1,7 @@
 package com.jmr.stream.demostream.client;
 
 
+import com.jmr.stream.demostream.config.ClientsProperties;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -17,21 +18,26 @@ import reactivefeign.webclient.WebReactiveFeign;
 public class TrackerAPIConfig {
 
     /**
+     * Clients Properties: tracker url
+     */
+    private ClientsProperties properties;
+
+    /**
      * TrackerAPI bean
      *
      * @return TrackerAPI bean
      */
     @Bean
     public TrackerAPI engineAPI() {
+        log.info("TrackerAPI url: [{}]", properties.getTracker().getUrl());
         //Builder
         TrackerAPI client =
                 WebReactiveFeign  //WebClient based reactive feign
                         //JettyReactiveFeign //Jetty http client based
                         //Java11ReactiveFeign //Java 11 http client based
                         .<TrackerAPI>builder()
-                        .target(TrackerAPI.class, "http://localhost:35007/tracker");
+                        .target(TrackerAPI.class, properties.getTracker().getUrl());
 
-        // todo: port and context to properties
         log.info("TrackerAPI DONE");
         return client;
     }

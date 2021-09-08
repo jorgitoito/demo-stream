@@ -15,7 +15,7 @@ import org.springframework.retry.annotation.EnableRetry;
 @Configuration
 @EnableRetry
 //Register all configuration property classes
-@EnableConfigurationProperties({DemoProperties.class})
+@EnableConfigurationProperties({DemoProperties.class, ClientsProperties.class})
 @Slf4j
 @AllArgsConstructor
 public class AppConfig {

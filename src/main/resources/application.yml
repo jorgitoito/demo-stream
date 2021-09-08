@@ -27,6 +27,10 @@ demostream:
       - "DELETE_USER"
       - "SEND_EMAIL"
 
+  clients:
+    tracker:
+      url: "http://localhost:35007/tracker"
+
 ## Spring properties
 spring:
   application:

@@ -1,10 +1,15 @@
 package com.jmr.stream.demostream.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jmr.stream.demostream.stream.dto.LongIdMessage;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -115,4 +120,55 @@ public class ServiceUtil {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, error);
     }
 
+
+    public void sendMessage
+            (
+                    String dni, Object response, String type, boolean workflow, Processor applicationProcessor
+            ) {
+        try {
+            //Build message.
+            LongIdMessage message = LongIdMessage.builder()
+                    .id(1l)
+                    .idS(dni)
+                    .objectJson(this.getJson(response))
+                    .workflow(workflow).build();
+            log.info("sendMessage: message: {}", message);
+            //Send message.
+            Message<LongIdMessage> mess;
+            if (workflow) {
+                mess = MessageUtil.message(message, type, true);
+            } else {
+                mess = MessageUtil.message(message, type);
+            }
+            log.info("sendMessage: message: {}", message);
+            applicationProcessor.output().send
+                    (
+                            mess
+                    );
+
+        } catch (Exception e) {
+            log.error("sendMessage: error [{}] ", e.getMessage());
+        }
+    }
+
+
+    /**
+     * Get json string from Object
+     *
+     * @param obj Object to get json string
+     * @return json string from Object
+     */
+    private String getJson(Object obj) {
+        if (obj == null) {
+            return "";
+        }
+        String json = null;
+        try {
+            json = new ObjectMapper().writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            log.error("getJson: error [{}] ", e.getMessage());
+        }
+        log.info("getJson: json [{}] ", json);
+        return json;
+    }
 }

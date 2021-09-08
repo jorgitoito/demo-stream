@@ -1,13 +1,10 @@
 package com.jmr.stream.demostream.service;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jmr.stream.demostream.model.dto.UserDTO;
 import com.jmr.stream.demostream.model.entity.UserEntity;
-import com.jmr.stream.demostream.stream.dto.LongIdMessage;
-import com.jmr.stream.demostream.util.MessageUtil;
 import com.jmr.stream.demostream.util.NullChecker;
+import com.jmr.stream.demostream.util.ServiceUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -35,6 +32,11 @@ public class UserServiceBusiness {
      * Model mapper
      */
     private final ModelMapper modelMapper;
+
+    /**
+     * Util class
+     */
+    private final ServiceUtil serviceUtil;
 
     /**
      * Get Users
@@ -82,7 +84,7 @@ public class UserServiceBusiness {
         UserEntity response = service.createUser(payloadUser);
         log.debug("createUser: user created [{}] ", response);
         // record this event sending a message
-        this.sendMessage(payloadUser.getDni(), response, "CREATE_USER", false);
+        serviceUtil.sendMessage(payloadUser.getDni(), response, "CREATE_USER", false, applicationProcessor);
         return modelMapper.map(response, UserDTO.class);
     }
 
@@ -96,58 +98,10 @@ public class UserServiceBusiness {
         NullChecker.checkNull_NOT_FOUND(result, "User not found with dni: " + dni);
         service.deleteUser(result);
         // once delete is done, send message: workflow : 2 steps: 1 DELETE_USER event and 2 Send Notification
-        this.sendMessage(dni, null, "DELETE_USER_FINISHED", true);
+        serviceUtil.sendMessage(dni, null, "DELETE_USER_FINISHED", true, applicationProcessor);
         log.debug("deleteUserByDni: deleted");
     }
 
     // PRIVATE
-
-    private void sendMessage(String dni, UserEntity response, String type, boolean workflow) {
-        try {
-            //Build message.
-            LongIdMessage message = LongIdMessage.builder()
-                    .id(1l)
-                    .idS(dni)
-                    .objectJson(this.getJson(response))
-                    .workflow(workflow).build();
-            //Send message.
-            if (workflow) {
-                this.applicationProcessor.output().send
-                        (
-                                MessageUtil.message(message, type, true)
-                        );
-            } else {
-                this.applicationProcessor.output().send
-                        (
-                                MessageUtil.message(message, type, false)
-                        );
-            }
-
-        } catch (Exception e) {
-            log.error("createUser: error [{}] ", e.getMessage());
-        }
-    }
-
-
-    /**
-     * Get json string from Object
-     *
-     * @param obj Object to get json string
-     * @return json string from Object
-     */
-    private String getJson(Object obj) {
-        if (obj == null) {
-            return "";
-        }
-        String json = null;
-        try {
-            json = new ObjectMapper().writeValueAsString(obj);
-        } catch (JsonProcessingException e) {
-            log.error("getJson: error [{}] ", e.getMessage());
-        }
-        log.info("getJson: json [{}] ", json);
-        return json;
-    }
-
 
 }

@@ -43,7 +43,7 @@ public class TrackerController {
      * Send a string to another micro-service, using Open Feign
      * @return String
      */
-    @Operation(summary = "Post DATA")
+    @Operation(summary = "Post DATA by REST API call")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Post DATA",
                     content = @Content(
@@ -75,7 +75,7 @@ public class TrackerController {
      * Send a string to another micro-service, using Open Feign
      * @return String
      */
-    @Operation(summary = "Post DATA")
+    @Operation(summary = "Post DATA by Broker Message")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Post DATA",
                     content = @Content(

@@ -90,6 +90,14 @@ spring:
     open-in-view: false
 
 
+  zipkin:
+    baseUrl: http://localhost:9411/
+    enabled: true
+  sleuth:
+    sampler:
+      percentage: 2.0
+
+
 springdoc:
   swagger-ui:
     #For sorting endpoints alphabetically
